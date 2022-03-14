@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/nexflix-clone/static/js/main.d8facc38.js",
+    "index.html": "/nexflix-clone/index.html",
+    "main.d8facc38.js.map": "/nexflix-clone/static/js/main.d8facc38.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.d8facc38.js"
+  ]
+}
