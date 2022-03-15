@@ -1,4 +1,4 @@
-import { StringMappingType } from "typescript";
+
 
 const API_KEY = "a09449c148c25d33a90a05be31587c64";
 const BASE_PATH = "https://api.themoviedb.org/3";
