@@ -1,11 +1,11 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
-import { getMovies, IGetMovieResult } from "../api";
-import { makeImagePath } from "./Utils";
+import { getMovies, getPopularTvs, IGetTvResult } from "../api";
 import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
+import { makeImagePath } from "../Routes/Utils";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -181,16 +181,16 @@ const infoVariants = {
 
 const offset = 6;
 
-function Home() {
+function Popular() {
   const history = useHistory();
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
+  const bigTvMatch = useRouteMatch<{ tvId: string }>("/tv/:tvId");
+  console.log(bigTvMatch);
   const { scrollY } = useViewportScroll();
   // 데이터 가져오기
-  const { data, isLoading } = useQuery<IGetMovieResult>(
-    ["movies", "nowPlaying"],
-    getMovies
+  const { data, isLoading } = useQuery<IGetTvResult>(
+    ["tvs", "popular"],
+    getPopularTvs
   );
-  console.log(data)
 
   const rowVariants = {
     hidden: (back: boolean) => ({
@@ -245,25 +245,27 @@ function Home() {
     }
   };
   const toggleLeaving = () => setLeaving((prev) => !prev);
-  const onBoxClicked = (movieId: number) => {
-    history.push(`/movies/${movieId}`);
+  const onBoxClicked = (tvId: number) => {
+    history.push(`/tv/${tvId}`);
   };
-  const onOverlayClick = () => history.push("/");
-  const clickedMovie =
-    bigMovieMatch?.params.movieId &&
-    data?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId);
-  return (
+  const onOverlayClick = () => history.push("/tv");
+  const clickedTv =
+    bigTvMatch?.params.tvId &&
+    data?.results.find((tv) => tv.id === +bigTvMatch.params.tvId);
+  
+    console.log(clickedTv);
+    return (
     <Wrapper>
       {isLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
           <Banner bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}>
-            <Title>{data?.results[0].title}</Title>
+            <Title>{data?.results[0].name}</Title>
             <Overview>{data?.results[0].overview}</Overview>
           </Banner>
           <Slider>
-            <SlideTitle>Now Playing</SlideTitle>
+            <SlideTitle>인기 시리즈</SlideTitle>
             <SlideBtn style={{ left: 0 }} onClick={decreaseIndex}>
               <FaAngleLeft />
             </SlideBtn>
@@ -288,19 +290,19 @@ function Home() {
                 {data?.results
                   .slice(1)
                   .slice(offset * index, offset * index + offset)
-                  .map((movie) => (
+                  .map((tv) => (
                     <Box
-                      layoutId={movie.id + ""}
-                      key={movie.id}
+                      layoutId={`${tv.id}`}
+                      key={tv.id}
                       whileHover="hover"
                       initial="normal"
                       transition={{ type: "tween" }}
-                      onClick={() => onBoxClicked(movie.id)}
+                      onClick={() => onBoxClicked(tv.id)}
                       variants={boxVariants}
-                      bigphoto={makeImagePath(movie.backdrop_path)}
+                      bigphoto={makeImagePath(tv.backdrop_path)}
                     >
                       <Info variants={infoVariants}>
-                        <h4>{movie.title}</h4>
+                        <h4>{tv.name}</h4>
                         
                       </Info>
                     </Box>
@@ -309,7 +311,7 @@ function Home() {
             </AnimatePresence>
           </Slider>
           <AnimatePresence>
-            {bigMovieMatch ? (
+            {bigTvMatch ? (
               <>
                 <Overlay
                   onClick={onOverlayClick}
@@ -318,22 +320,22 @@ function Home() {
                 />
                 <BigMovie
                   style={{ top: scrollY.get() + 100 }}
-                  layoutId={bigMovieMatch.params.movieId}
+                  layoutId={bigTvMatch.params.tvId}
                 >
-                  {clickedMovie && (
+                  {clickedTv && (
                     <>
                       <BigCover
                         style={{
                           backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            clickedMovie.backdrop_path,
+                            clickedTv.backdrop_path,
                             "w500"
                           )})`,
                         }}
                       />
-                      <BigTitle>{clickedMovie.title}</BigTitle>
-                      <Bigdate>{clickedMovie.release_date}</Bigdate>
-                      <BigVote><span>평점</span> {clickedMovie.vote_average}</BigVote>
-                      <BigOverview>{clickedMovie.overview}</BigOverview>
+                      <BigTitle>{clickedTv.name}</BigTitle>
+                      <Bigdate>{clickedTv.first_air_date}</Bigdate>
+                      <BigVote><span>평점</span> {clickedTv.vote_average}</BigVote>
+                      <BigOverview>{clickedTv.overview}</BigOverview>
                     </>
                   )}
                 </BigMovie>
@@ -345,4 +347,4 @@ function Home() {
     </Wrapper>
   );
 }
-export default Home;
+export default Popular;

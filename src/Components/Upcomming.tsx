@@ -1,11 +1,12 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
-import { getMovies, IGetMovieResult } from "../api";
-import { makeImagePath } from "./Utils";
+import { getUpcommingMovies, getPopularTvs, IGetMovieResult } from "../api";
+
 import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
+import { makeImagePath } from "../Routes/Utils";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -39,8 +40,7 @@ const Overview = styled.p`
 `;
 
 const Slider = styled.div`
-  position: relative;
-  top: -100px;
+
 `;
 
 const Row = styled(motion.div)`
@@ -181,16 +181,15 @@ const infoVariants = {
 
 const offset = 6;
 
-function Home() {
+function Upcomming() {
   const history = useHistory();
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
+  const bigMovieMatch = useRouteMatch<{ movieId: string }>("/tv/:movieId");
   const { scrollY } = useViewportScroll();
   // 데이터 가져오기
   const { data, isLoading } = useQuery<IGetMovieResult>(
-    ["movies", "nowPlaying"],
-    getMovies
+    ["movies", "upcommingmovie"],
+    getUpcommingMovies
   );
-  console.log(data)
 
   const rowVariants = {
     hidden: (back: boolean) => ({
@@ -246,9 +245,9 @@ function Home() {
   };
   const toggleLeaving = () => setLeaving((prev) => !prev);
   const onBoxClicked = (movieId: number) => {
-    history.push(`/movies/${movieId}`);
+    history.push(`/tv/${movieId}`);
   };
-  const onOverlayClick = () => history.push("/");
+  const onOverlayClick = () => history.push("/tv");
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
     data?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId);
@@ -258,12 +257,8 @@ function Home() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}>
-            <Title>{data?.results[0].title}</Title>
-            <Overview>{data?.results[0].overview}</Overview>
-          </Banner>
           <Slider>
-            <SlideTitle>Now Playing</SlideTitle>
+            <SlideTitle>개봉 예정 영화</SlideTitle>
             <SlideBtn style={{ left: 0 }} onClick={decreaseIndex}>
               <FaAngleLeft />
             </SlideBtn>
@@ -345,4 +340,4 @@ function Home() {
     </Wrapper>
   );
 }
-export default Home;
+export default Upcomming;
