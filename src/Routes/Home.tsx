@@ -6,6 +6,7 @@ import Banner from "../Components/Banner";
 
 const Wrapper = styled.div`
   background-color: black;
+  height: max-content;
 `;
 const Loader = styled.div`
   height: 20vh;
@@ -17,7 +18,7 @@ const Loader = styled.div`
 
 const SlideTitle = styled.h2`
   font-size: 2rem;
-  font-family: 600;
+  font-weight: 600;
   margin-bottom: 1rem;
   padding-left: 1rem;
 `;

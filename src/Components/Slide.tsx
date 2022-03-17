@@ -1,18 +1,20 @@
 
 import styled from "styled-components";
 import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
-import { IGetMovieResult,IGetShowResult,IMovie,IShow } from "../api";
+import { getGenre, IGetMovieResult,IGetShowResult,IMovie,IShow } from "../api";
 import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
+import { FaAngleRight, FaAngleLeft,FaStar } from "react-icons/fa";
 import { makeImagePath } from "../Routes/Utils";
+import { useQuery } from "react-query";
 
 const Wrapper = styled.div`
   background-color: black;
-`;
+  `;
 
 const Slider = styled.div`
-
+height: 200px;
+position: relative;
 `;
 
 const Row = styled(motion.div)`
@@ -22,6 +24,7 @@ const Row = styled(motion.div)`
   margin-bottom: 5px;
   position: absolute;
   width: 100%;
+  height: 100%;
 `;
 
 const Box = styled(motion.div)<{ bigphoto: string }>`
@@ -29,7 +32,6 @@ const Box = styled(motion.div)<{ bigphoto: string }>`
   background-image: url(${(props) => props.bigphoto});
   background-size: cover;
   background-position: center center;
-  height: 200px;
   font-size: 66px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   cursor: pointer;
@@ -221,6 +223,11 @@ function Slide({data, category,type, url}:ISlider) {
     bigMovieMatch?.params.movieId &&
     data?.results.find((movie:any) => movie.id === +bigMovieMatch.params.movieId);
 
+  const { data:genre, isLoading:LoadGenre } = useQuery<any>(
+      ["genre"],
+      ()=>getGenre(category)
+    );
+
   return (
     <Wrapper>
       {data && (
@@ -295,8 +302,9 @@ function Slide({data, category,type, url}:ISlider) {
                       />
                       <BigTitle>{clickedMovie.title || clickedMovie.name}</BigTitle>
                       <Bigdate>{clickedMovie.release_date || clickedMovie.first_air_date}</Bigdate>
-                      <BigVote><span>평점</span> {clickedMovie.vote_average}</BigVote>
+                      <BigVote><FaStar /><span>평점</span> {clickedMovie.vote_average}</BigVote>
                       <BigOverview>{clickedMovie.overview}</BigOverview>
+                      {/* <span>{genre.map(g=>g.id===)}</span> */}
                     </>
                   )}
                 </BigMovie>

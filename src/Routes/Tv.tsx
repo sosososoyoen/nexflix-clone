@@ -16,11 +16,11 @@ const Loader = styled.div`
 `;
 
 const SlideWrap = styled.div`
-  margin-top: 20em;
+  margin-top: 5rem;
 `
 const SlideTitle = styled.h2`
   font-size: 2rem;
-  font-family: 600;
+  font-weight: 600;
   margin-bottom: 1rem;
   padding-left: 1rem;
 `;

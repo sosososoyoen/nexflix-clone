@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { IGetMovieResult, IGetShowResult } from "../api";
 import { makeImagePath } from "../Routes/Utils";
 
 const Wrapper = styled.div`

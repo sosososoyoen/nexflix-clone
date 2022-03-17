@@ -72,3 +72,8 @@ export function getSearchShows(query:string|null){
     `${BASE_PATH}/search/tv?api_key=${API_KEY}&language=ko&query=${query}}&page=1&include_adult=false`
   ).then((response) => response.json());
 }
+export function getGenre(category:string|null){
+  return fetch(
+    `${BASE_PATH}/genre/movie/list?api_key=${API_KEY}&language=ko`
+  ).then((response) => response.json());
+}

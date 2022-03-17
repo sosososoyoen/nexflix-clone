@@ -4,6 +4,14 @@ import Home from "./Routes/Home";
 import Search from "./Routes/Search";
 import Tv from "./Routes/Tv";
 import { ReactQueryDevtools } from 'react-query/devtools'
+import styled from "styled-components";
+const FooterWrap = styled.footer`
+  margin-top: 7rem;
+  width:100%;
+  padding: 2rem;
+  text-align: center;
+  font-size: 12px;
+`
 
 function App() {
   return (
@@ -25,6 +33,7 @@ function App() {
         </Route>
       </Switch>
     </Router>
+    <FooterWrap>Portfollio <br /> hothemp35@gmail.com / Lee Soyeon</FooterWrap>
     <ReactQueryDevtools initialIsOpen={true} />
     </>
 

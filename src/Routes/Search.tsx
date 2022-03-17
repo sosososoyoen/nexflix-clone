@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
@@ -23,7 +24,7 @@ const Loader = styled.div`
 `;
 
 const SlideWrap = styled.div`
-  margin-top: 20em;
+  margin-top: 5em;
 `;
 const SlideTitle = styled.h2`
   font-size: 2rem;
@@ -36,15 +37,21 @@ function Search() {
   const location = useLocation();
   const keyword = new URLSearchParams(location.search).get("keyword");
 
-  const { data: searchMovie, isLoading: loadSearchMovie} =
+  const { data: searchMovie, isLoading: loadSearchMovie, refetch: refetchMovie} =
     useQuery<IGetMovieResult>(["search", "searchMovie"], () =>
       getSearchMovie(keyword)
     );
-  const { data: searchShows, isLoading: loadSearchShows } =
+  const { data: searchShows, isLoading: loadSearchShows, refetch: refetchShows } =
     useQuery<IGetShowResult>(["search", "searchShow"], () =>
       getSearchShows(keyword)
     );
-
+    useEffect(()=>{
+      if(keyword===""){
+        return;
+      }
+      refetchMovie();
+      refetchShows();
+    },[keyword,refetchMovie,refetchShows])
   return (
     <Wrapper>
       {loadSearchMovie && loadSearchShows ? (

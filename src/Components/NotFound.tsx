@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const NotFoundWrap = styled.span`
-  height: 100vh;
+  height: 75vh;
   text-align: center;
   display: flex;
   justify-content: center;
