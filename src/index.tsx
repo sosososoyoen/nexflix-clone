@@ -7,6 +7,7 @@ import { createGlobalStyle } from "styled-components";
 import { theme } from "./theme";
 import { QueryClient, QueryClientProvider } from "react-query";
 
+
 const GlobalStyle = createGlobalStyle`
 @font-face {
     font-family: 'Pretendard-Regular';

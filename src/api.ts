@@ -1,7 +1,7 @@
 const API_KEY = "a09449c148c25d33a90a05be31587c64";
 const BASE_PATH = "https://api.themoviedb.org/3";
 
-interface IMovie {
+export interface IMovie {
   id: number;
   backdrop_path: string;
   poster_path: string;
@@ -10,7 +10,7 @@ interface IMovie {
   release_date: string;
   vote_average: number;
 }
-interface ITv {
+export interface IShow {
   id: number;
   backdrop_path: string;
   poster_path: string;
@@ -20,13 +20,13 @@ interface ITv {
   vote_average: number;
 }
 
-export interface IGetTvResult {
+export interface IGetShowResult {
   date: {
     maximum: string;
     minimum: string;
   };
   page: number;
-  results: ITv[];
+  results: IShow[];
   total_pages: number;
   total_results: number;
 }
@@ -46,13 +46,18 @@ export function getMovies() {
     `${BASE_PATH}/movie/now_playing?api_key=${API_KEY}&language=ko`
   ).then((response) => response.json());
 }
-export function getPopularTvs() {
+export function getPopularShows() {
   return fetch(
     `${BASE_PATH}/tv/popular?api_key=${API_KEY}&language=ko`
   ).then((response) => response.json());
 }
-export function getUpcommingMovies() {
+export function getTopShows() {
   return fetch(
-    `${BASE_PATH}/movie/upcoming?api_key=${API_KEY}&language=ko`
+    `${BASE_PATH}/tv/top_rated?api_key=${API_KEY}&language=ko`
+  ).then((response) => response.json());
+}
+export function getOnAirShows() {
+  return fetch(
+    `${BASE_PATH}/tv/airing_today?api_key=${API_KEY}&language=ko`
   ).then((response) => response.json());
 }

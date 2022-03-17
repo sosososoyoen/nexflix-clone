@@ -1,8 +1,7 @@
-import { useQuery } from "react-query";
+
 import styled from "styled-components";
 import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
-import { getUpcommingMovies, getPopularTvs, IGetMovieResult } from "../api";
-
+import { IGetMovieResult,IGetShowResult,IMovie,IShow } from "../api";
 import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
@@ -10,33 +9,6 @@ import { makeImagePath } from "../Routes/Utils";
 
 const Wrapper = styled.div`
   background-color: black;
-`;
-const Loader = styled.div`
-  height: 20vh;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Banner = styled.div<{ bgPhoto: string }>`
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 60px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
-    url(${(props) => props.bgPhoto});
-  background-size: cover;
-`;
-const Title = styled.h2`
-  font-size: 68px;
-  margin-bottom: 20px;
-  font-weight: 600;
-`;
-const Overview = styled.p`
-  font-size: 1.5rem;
-  width: 45%;
 `;
 
 const Slider = styled.div`
@@ -53,7 +25,7 @@ const Row = styled(motion.div)`
 `;
 
 const Box = styled(motion.div)<{ bigphoto: string }>`
-  background-color: white;
+  background-color: gray;
   background-image: url(${(props) => props.bigphoto});
   background-size: cover;
   background-position: center center;
@@ -69,12 +41,7 @@ const Box = styled(motion.div)<{ bigphoto: string }>`
   }
 `;
 
-const SlideTitle = styled.h2`
-  font-size: 1.5rem;
-  font-family: 600;
-  margin-bottom: 1rem;
-  padding-left: 1rem;
-`;
+
 
 const SlideBtn = styled.button`
   position: absolute;
@@ -180,16 +147,16 @@ const infoVariants = {
 };
 
 const offset = 6;
-
-function Upcomming() {
+interface ISlider {
+    data: any;
+    category: string;
+    url: string;
+    type:string;
+}
+function Slide({data, category,type, url}:ISlider) {
   const history = useHistory();
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>("/tv/:movieId");
+  const bigMovieMatch = useRouteMatch<{ movieId: string }>(`/${category}/:movieId`);
   const { scrollY } = useViewportScroll();
-  // 데이터 가져오기
-  const { data, isLoading } = useQuery<IGetMovieResult>(
-    ["movies", "upcommingmovie"],
-    getUpcommingMovies
-  );
 
   const rowVariants = {
     hidden: (back: boolean) => ({
@@ -226,18 +193,19 @@ function Upcomming() {
       // 두번 연속해서 누르면 leaving이 true가 되기 때문에
       // setIndex 발동하지 않고 함수 종료
       //그러나 계속 true 상태로 잇음;; 이걸 onExitComplete prop으로 해결함
-      setBack(false);
       setLeaving(true);
+      setBack(false);
       const totalMovies = data?.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
       setIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
     }
   };
+  
   const decreaseIndex = () => {
     if (data) {
       if (leaving) return;
-      setBack(true);
       setLeaving(true);
+      setBack(true);
       const totalMovies = data?.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
       setIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
@@ -245,20 +213,21 @@ function Upcomming() {
   };
   const toggleLeaving = () => setLeaving((prev) => !prev);
   const onBoxClicked = (movieId: number) => {
-    history.push(`/tv/${movieId}`);
+    history.push(`/${category}/${type}/${movieId}`);
   };
-  const onOverlayClick = () => history.push("/tv");
+  const onOverlayClick = () => history.push(`/${url}`);
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
-    data?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId);
+    data?.results.find((movie:any) => movie.id === +bigMovieMatch.params.movieId);
+
+    console.log(bigMovieMatch);
+  console.log(clickedMovie);
   return (
     <Wrapper>
-      {isLoading ? (
-        <Loader>Loading...</Loader>
-      ) : (
+      {data && (
         <>
           <Slider>
-            <SlideTitle>개봉 예정 영화</SlideTitle>
+
             <SlideBtn style={{ left: 0 }} onClick={decreaseIndex}>
               <FaAngleLeft />
             </SlideBtn>
@@ -273,6 +242,7 @@ function Upcomming() {
               onExitComplete={toggleLeaving}
             >
               <Row
+                custom={back}
                 variants={rowVariants}
                 initial="hidden"
                 animate="visible"
@@ -283,9 +253,9 @@ function Upcomming() {
                 {data?.results
                   .slice(1)
                   .slice(offset * index, offset * index + offset)
-                  .map((movie) => (
+                  .map((movie:any) => (
                     <Box
-                      layoutId={movie.id + ""}
+                      layoutId={`${movie.id}${type}`}
                       key={movie.id}
                       whileHover="hover"
                       initial="normal"
@@ -295,7 +265,7 @@ function Upcomming() {
                       bigphoto={makeImagePath(movie.backdrop_path)}
                     >
                       <Info variants={infoVariants}>
-                        <h4>{movie.title}</h4>
+                        <h4>{movie.title || movie.name}</h4>
                         
                       </Info>
                     </Box>
@@ -313,7 +283,7 @@ function Upcomming() {
                 />
                 <BigMovie
                   style={{ top: scrollY.get() + 100 }}
-                  layoutId={bigMovieMatch.params.movieId}
+                  layoutId={`${bigMovieMatch.params.movieId}${type}`}
                 >
                   {clickedMovie && (
                     <>
@@ -325,8 +295,8 @@ function Upcomming() {
                           )})`,
                         }}
                       />
-                      <BigTitle>{clickedMovie.title}</BigTitle>
-                      <Bigdate>{clickedMovie.release_date}</Bigdate>
+                      <BigTitle>{clickedMovie.title || clickedMovie.name}</BigTitle>
+                      <Bigdate>{clickedMovie.release_date || clickedMovie.first_air_date}</Bigdate>
                       <BigVote><span>평점</span> {clickedMovie.vote_average}</BigVote>
                       <BigOverview>{clickedMovie.overview}</BigOverview>
                     </>
@@ -340,4 +310,4 @@ function Upcomming() {
     </Wrapper>
   );
 }
-export default Upcomming;
+export default Slide;
