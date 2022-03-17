@@ -19,7 +19,7 @@ const SlideWrap = styled.div`
   margin-top: 20em;
 `
 const SlideTitle = styled.h2`
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-family: 600;
   margin-bottom: 1rem;
   padding-left: 1rem;

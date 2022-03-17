@@ -61,3 +61,14 @@ export function getOnAirShows() {
     `${BASE_PATH}/tv/airing_today?api_key=${API_KEY}&language=ko`
   ).then((response) => response.json());
 }
+
+export function getSearchMovie(query:string|null){
+  return fetch(
+    `${BASE_PATH}/search/movie?api_key=${API_KEY}&language=ko&query=${query}}&page=1&include_adult=false`
+  ).then((response) => response.json());
+}
+export function getSearchShows(query:string|null){
+  return fetch(
+    `${BASE_PATH}/search/tv?api_key=${API_KEY}&language=ko&query=${query}}&page=1&include_adult=false`
+  ).then((response) => response.json());
+}

@@ -47,7 +47,7 @@ const SlideBtn = styled.button`
   position: absolute;
   height: 200px;
   background-color: rgba(0, 0, 0, 0.9);
-  z-index: 9;
+  z-index: 5;
   border: none;
   color: white;
   cursor: pointer;
@@ -96,6 +96,7 @@ const BigMovie = styled(motion.div)`
   margin: 0 auto;
   border-radius: 15px;
   overflow: hidden;
+  z-index: 99;
   background-color: ${(props) => props.theme.black.lighter};
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 `;
@@ -155,7 +156,7 @@ interface ISlider {
 }
 function Slide({data, category,type, url}:ISlider) {
   const history = useHistory();
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>(`/${category}/:movieId`);
+  const bigMovieMatch = useRouteMatch<{ movieId: string }>(`/${category}/${type}/:movieId`);
   const { scrollY } = useViewportScroll();
 
   const rowVariants = {
@@ -215,13 +216,11 @@ function Slide({data, category,type, url}:ISlider) {
   const onBoxClicked = (movieId: number) => {
     history.push(`/${category}/${type}/${movieId}`);
   };
-  const onOverlayClick = () => history.push(`/${url}`);
+  const onOverlayClick = () => history.goBack();
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
     data?.results.find((movie:any) => movie.id === +bigMovieMatch.params.movieId);
 
-    console.log(bigMovieMatch);
-  console.log(clickedMovie);
   return (
     <Wrapper>
       {data && (
@@ -251,7 +250,6 @@ function Slide({data, category,type, url}:ISlider) {
                 key={index}
               >
                 {data?.results
-                  .slice(1)
                   .slice(offset * index, offset * index + offset)
                   .map((movie:any) => (
                     <Box

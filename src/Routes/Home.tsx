@@ -16,7 +16,7 @@ const Loader = styled.div`
 `;
 
 const SlideTitle = styled.h2`
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-family: 600;
   margin-bottom: 1rem;
   padding-left: 1rem;
@@ -35,7 +35,7 @@ function Home() {
       ) : (
         <>
             <Banner data={nowPlaying} />
-            <SlideTitle>Now Playing</SlideTitle>
+            <SlideTitle>상영 중인 영화</SlideTitle>
             <Slide  data={nowPlaying} type="nowPlaying" category="movie" url="" />
         </>
       )}

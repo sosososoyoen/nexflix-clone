@@ -16,9 +16,10 @@ const Nav = styled(motion.nav)`
   width: 100%;
   top: 0;
   background-color: black;
-  font-size: 14px;
   padding: 20px 60px;
   color: white;
+  text-shadow: black 1px 0 10px;
+  z-index: 9;
 `;
 
 const Col = styled.div`
@@ -117,10 +118,10 @@ function Header() {
   //스타일 변수로 저장
   const navVariants = {
     top: {
-      backgroundColor: "rgba(0, 0, 0, 1)",
+      backgroundColor: "rgba(0, 0, 0, 0)",
     },
     scroll: {
-      backgroundColor: "rgba(0, 0, 0, 0)",
+      backgroundColor: "rgba(0, 0, 0, 1)",
     },
   };
 
@@ -179,12 +180,12 @@ function Header() {
           <Item>
             <Link to="/">
               {/* homeMatch가 있고, ixExact가 true면 Circle 표시 */}
-              Home {homeMatch?.isExact && <Circle layoutId="circle" />}
+              홈 {homeMatch?.isExact && <Circle layoutId="circle" />}
             </Link>
           </Item>
           <Item>
             <Link to="/tv">
-              Tv Shows {tvMatch && <Circle layoutId="circle" />}
+              시리즈 {tvMatch && <Circle layoutId="circle" />}
             </Link>
           </Item>
         </Items>
