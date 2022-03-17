@@ -1,7 +1,14 @@
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { getSearchMovie, getSearchShows, IGetMovieResult, IGetShowResult } from "../api";
+import {
+  getSearchMovie,
+  getSearchShows,
+  IGetMovieResult,
+  IGetShowResult,
+} from "../api";
+import NotFound from "../Components/NotFound";
 import Slide from "../Components/Slide";
 
 const Wrapper = styled.div`
@@ -28,29 +35,42 @@ const SlideTitle = styled.h2`
 function Search() {
   const location = useLocation();
   const keyword = new URLSearchParams(location.search).get("keyword");
-  console.log(keyword);
-  const { data: searchMovie, isLoading: loadSearchMovie } =
+
+  const { data: searchMovie, isLoading: loadSearchMovie} =
     useQuery<IGetMovieResult>(["search", "searchMovie"], () =>
       getSearchMovie(keyword)
     );
   const { data: searchShows, isLoading: loadSearchShows } =
     useQuery<IGetShowResult>(["search", "searchShow"], () =>
-    getSearchShows(keyword)
+      getSearchShows(keyword)
     );
 
   return (
     <Wrapper>
       {loadSearchMovie && loadSearchShows ? (
         <Loader>Loading...</Loader>
-      ) : searchMovie?.total_results===0 || searchShows?.total_results===0? (<span>그없</span>) :
-        (<>
+      ) : searchMovie?.total_results === 0 ||
+        searchShows?.total_results === 0 ? (
+        <NotFound />
+      ) : (
+        <>
           <SlideWrap>
             <SlideTitle>영화 검색 결과</SlideTitle>
-            <Slide data={searchMovie} category="search" type="movie" url="search" />
+            <Slide
+              data={searchMovie}
+              category="search"
+              type="movie"
+              url="search"
+            />
           </SlideWrap>
           <SlideWrap>
-            <SlideTitle>영화 검색 결과</SlideTitle>
-            <Slide data={searchShows} category="search" type="tv" url="search" />
+            <SlideTitle>TV 시리즈 검색 결과</SlideTitle>
+            <Slide
+              data={searchShows}
+              category="search"
+              type="tv"
+              url="search"
+            />
           </SlideWrap>
         </>
       )}
