@@ -380,7 +380,7 @@ function Slide({ data, category, type, url }: ISlider) {
                       transition={{ type: "tween" }}
                       onClick={() => onBoxClicked(movie.id)}
                       variants={boxVariants}
-                      bigphoto={makeImagePath(movie.backdrop_path)}
+                      bigphoto={makeImagePath(movie.backdrop_path,"w400")}
                     >
                       <Info variants={infoVariants}>
                         <h4>{movie.title || movie.name}</h4>
@@ -407,8 +407,7 @@ function Slide({ data, category, type, url }: ISlider) {
                       <BigCover
                         style={{
                           backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            clickedMovie.backdrop_path,
-                            "w500"
+                            clickedMovie.backdrop_path
                           )})`,
                         }}
                       />
