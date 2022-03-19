@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { getMovies, IGetMovieResult } from "../api";
 import Slide from "../Components/Slide";
 import Banner from "../Components/Banner";
+import { Helmet } from "react-helmet";
 
 const Wrapper = styled.main`
   background-color: black;
@@ -23,21 +24,24 @@ const SlideTitle = styled.h2`
   padding-left: 1rem;
 `;
 function Home() {
-
-  const { data:nowPlaying, isLoading } = useQuery<IGetMovieResult>(
+  const { data: nowPlaying, isLoading } = useQuery<IGetMovieResult>(
     ["movies", "nowPlaying"],
     getMovies
   );
 
   return (
     <Wrapper>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Nooflix Clone - 영화</title>
+      </Helmet>
       {isLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
-            <Banner data={nowPlaying} />
-            <SlideTitle>상영 중인 영화</SlideTitle>
-            <Slide  data={nowPlaying} type="nowPlaying" category="movie" url="" />
+          <Banner data={nowPlaying} />
+          <SlideTitle>상영 중인 영화</SlideTitle>
+          <Slide data={nowPlaying} type="nowPlaying" category="movie" url="" />
         </>
       )}
     </Wrapper>

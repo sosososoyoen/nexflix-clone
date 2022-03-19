@@ -1,8 +1,14 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import { getOnAirShows, getPopularShows, getTopShows, IGetMovieResult } from "../api";
+import {
+  getOnAirShows,
+  getPopularShows,
+  getTopShows,
+  IGetMovieResult,
+} from "../api";
 import Slide from "../Components/Slide";
 import Banner from "../Components/Banner";
+import { Helmet } from "react-helmet";
 
 const Wrapper = styled.main`
   background-color: black;
@@ -17,7 +23,7 @@ const Loader = styled.div`
 
 const SlideWrap = styled.div`
   margin-top: 5rem;
-`
+`;
 const SlideTitle = styled.h2`
   font-size: 2rem;
   font-weight: 600;
@@ -25,38 +31,38 @@ const SlideTitle = styled.h2`
   padding-left: 1rem;
 `;
 function Home() {
-
-  const { data:popularShows, isLoading:loadPopulars } = useQuery<IGetMovieResult>(
-    ["shows", "popularShows"],
-    getPopularShows
-  );
-  const { data:topShows, isLoading:loadTops } = useQuery<IGetMovieResult>(
+  const { data: popularShows, isLoading: loadPopulars } =
+    useQuery<IGetMovieResult>(["shows", "popularShows"], getPopularShows);
+  const { data: topShows, isLoading: loadTops } = useQuery<IGetMovieResult>(
     ["shows", "topShows"],
     getTopShows
   );
-  const { data:onAirShows, isLoading:loadOnAir } = useQuery<IGetMovieResult>(
+  const { data: onAirShows, isLoading: loadOnAir } = useQuery<IGetMovieResult>(
     ["shows", "onAirShows"],
     getOnAirShows
   );
-  
 
   return (
     <Wrapper>
-      {loadPopulars&&loadTops&&loadOnAir ? (
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Nooflix Clone - 시리즈</title>
+      </Helmet>
+      {loadPopulars && loadTops && loadOnAir ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
-            <Banner data={popularShows} />
-            <SlideTitle>인기 시리즈</SlideTitle>
-            <Slide  data={popularShows} category="tv" type="popular" url="tv" />
-            <SlideWrap>
+          <Banner data={popularShows} />
+          <SlideTitle>인기 시리즈</SlideTitle>
+          <Slide data={popularShows} category="tv" type="popular" url="tv" />
+          <SlideWrap>
             <SlideTitle>평판이 좋은 시리즈</SlideTitle>
-            <Slide  data={topShows} category="tv" type="topRated" url="tv" />
-            </SlideWrap>
-            <SlideWrap>
+            <Slide data={topShows} category="tv" type="topRated" url="tv" />
+          </SlideWrap>
+          <SlideWrap>
             <SlideTitle>방영 중인 시리즈</SlideTitle>
-            <Slide  data={onAirShows} category="tv" type="onAir" url="tv" />
-            </SlideWrap>
+            <Slide data={onAirShows} category="tv" type="onAir" url="tv" />
+          </SlideWrap>
         </>
       )}
     </Wrapper>
