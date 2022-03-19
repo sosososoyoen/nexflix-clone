@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { makeImagePath } from "../Routes/Utils";
 
-const Wrapper = styled.div`
+const Wrapper = styled.article`
   background-color: black;
 `;
 

@@ -10,6 +10,18 @@ export interface IMovie {
   release_date: string;
   vote_average: number;
 }
+export interface IDetail {
+  genres: IGenres[],
+  homepage: string,
+  original_title: string,
+  original_name?: string,
+  tagline:string,
+  runtime: number,
+}
+interface IGenres {
+  id: number,
+  name: string,
+}
 export interface IShow {
   id: number;
   backdrop_path: string;
@@ -72,8 +84,18 @@ export function getSearchShows(query:string|null){
     `${BASE_PATH}/search/tv?api_key=${API_KEY}&language=ko&query=${query}}&page=1&include_adult=false`
   ).then((response) => response.json());
 }
-export function getGenre(category:string|null){
+export function getDetail(category:string|undefined,movieId:string|undefined){
   return fetch(
-    `${BASE_PATH}/genre/movie/list?api_key=${API_KEY}&language=ko`
+    `${BASE_PATH}/${category}/${movieId}?api_key=${API_KEY}&language=ko`
+  ).then((response) => response.json());
+}
+export function getSimilar(category:string|undefined,movieId:string|undefined){
+  return fetch(
+    `${BASE_PATH}/${category}/${movieId}/similar?api_key=${API_KEY}&language=ko`
+  ).then((response) => response.json());
+}
+export function getCredits(category:string|undefined,movieId:string|undefined){
+  return fetch(
+    `${BASE_PATH}/${category}/${movieId}/credits?api_key=${API_KEY}&language=ko`
   ).then((response) => response.json());
 }

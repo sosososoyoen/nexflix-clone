@@ -4,7 +4,7 @@ import { getOnAirShows, getPopularShows, getTopShows, IGetMovieResult } from "..
 import Slide from "../Components/Slide";
 import Banner from "../Components/Banner";
 
-const Wrapper = styled.div`
+const Wrapper = styled.main`
   background-color: black;
 `;
 const Loader = styled.div`

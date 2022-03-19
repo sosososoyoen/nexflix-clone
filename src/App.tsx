@@ -16,7 +16,7 @@ const FooterWrap = styled.footer`
 function App() {
   return (
     <>
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
 
       <Header />
       <Switch>
