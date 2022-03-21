@@ -15,9 +15,9 @@ const Nav = styled(motion.nav)`
   position: fixed;
   width: 100%;
   top: 0;
-  background-color: black;
+  background-color: ${(props) => props.theme.bgLighter};
   padding: 20px 60px;
-  color: white;
+  color: ${(props) => props.theme.text};
   text-shadow: black 1px 1px 10px;
   z-index: 9;
 `;
@@ -45,17 +45,17 @@ const Items = styled.ul`
 
 const Item = styled.li`
   margin-right: 20px;
-  color: ${(props) => props.theme.white.darker};
+  color: ${(props) => props.theme.textDarker};
   transition: color 0.3s ease-in-out;
   position: relative;
   &:hover {
-    color: ${(props) => props.theme.white.lighter};
+    color: ${(props) => props.theme.textDarker};
   }
   display: flex;
   justify-content: center;
   flex-direction: column;
   &:hover {
-    color: ${(props) => props.theme.white.lighter};
+    color: ${(props) => props.theme.textDarker};
   }
 `;
 
@@ -79,7 +79,7 @@ const Input = styled(motion.input)`
   color: white;
   font-size: 16px;
   background-color: transparent;
-  border: 1px solid ${(props) => props.theme.white.lighter};
+  border: 1px solid ${(props) => props.theme.textDarker};
 `;
 
 const Circle = styled(motion.span)`

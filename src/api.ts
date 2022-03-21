@@ -5,15 +5,19 @@ export interface IMovie {
   id: number;
   backdrop_path: string;
   poster_path: string;
-  title: string;
+  title?: string;
+  name?:string;
+  original_title?: string,
+  original_name?: string,
   overview: string;
-  release_date: string;
+  release_date?: string;
+  first_air_date?: string;
   vote_average: number;
 }
 export interface IDetail {
   genres: IGenres[],
   homepage: string,
-  original_title: string,
+  original_title?: string,
   original_name?: string,
   tagline:string,
   runtime: number,
@@ -51,6 +55,13 @@ export interface IGetMovieResult {
   results: IMovie[];
   total_pages: number;
   total_results: number;
+}
+export interface ICredit {
+  cast: ICast[];
+}
+export interface ICast{
+  id: number,
+  name: string,
 }
 
 export function getMovies() {

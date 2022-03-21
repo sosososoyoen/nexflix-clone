@@ -6,7 +6,7 @@ import Banner from "../Components/Banner";
 import { Helmet } from "react-helmet";
 
 const Wrapper = styled.main`
-  background-color: black;
+  background-color: ${props => props.theme.bgDarker};
   height: max-content;
 `;
 const Loader = styled.div`

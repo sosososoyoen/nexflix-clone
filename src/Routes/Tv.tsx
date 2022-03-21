@@ -11,7 +11,7 @@ import Banner from "../Components/Banner";
 import { Helmet } from "react-helmet";
 
 const Wrapper = styled.main`
-  background-color: black;
+  background-color: ${props => props.theme.bgDarker};
 `;
 const Loader = styled.div`
   height: 20vh;

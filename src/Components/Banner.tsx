@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { makeImagePath } from "../Routes/Utils";
 
 const Wrapper = styled.article`
-  background-color: black;
+  background-color: ${props => props.theme.bgLighter};
 `;
 
 const BannerWrap = styled.div<{ bgPhoto: string }>`

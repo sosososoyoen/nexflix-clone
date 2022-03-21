@@ -4,6 +4,8 @@ import {
   getCredits,
   getDetail,
   getSimilar,
+  ICast,
+  ICredit,
   IDetail,
   IGetMovieResult,
   IGetShowResult,
@@ -71,7 +73,7 @@ const SlideBtn = styled.button`
 
 const Info = styled(motion.div)`
   padding: 10px;
-  background-color: ${(props) => props.theme.black.lighter};
+  background-color: ${(props) => props.theme.bgLighter};
   opacity: 0;
   position: absolute;
   width: 100%;
@@ -91,6 +93,7 @@ const Overlay = styled(motion.div)`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.85);
   opacity: 0;
+  z-index: 99;
 `;
 
 const BigMovie = styled(motion.div)`
@@ -104,7 +107,7 @@ const BigMovie = styled(motion.div)`
   border-radius: 15px;
   overflow: auto;
   z-index: 99;
-  background-color: ${(props) => props.theme.black.lighter};
+  background-color: ${(props) => props.theme.bgLighter};
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
   &::-webkit-scrollbar {
     display: none;
@@ -121,7 +124,7 @@ const BigCover = styled.div`
 `;
 const BigTitle = styled.hgroup`
   h3 {
-    color: ${(props) => props.theme.white.lighter};
+    color: ${(props) => props.theme.text};
     font-size: 46px;
     position: relative;
     top: -80px;
@@ -189,7 +192,7 @@ const BigTagline = styled.summary`
 `;
 const BigOverview = styled.p`
   padding-top: 1.5rem;
-  color: ${(props) => props.theme.white.lighter};
+  color: ${(props) => props.theme.text};
 `;
 
 const SimilarWrap = styled.div`
@@ -222,7 +225,7 @@ const SimilarBox = styled(motion.div)<{ bigphoto: string }>`
 `;
 const SimilarInfo = styled(motion.hgroup)`
   padding: 10px;
-  background-color: ${(props) => props.theme.black.lighter};
+  background-color: ${(props) => props.theme.bgLighter};
   opacity: 0;
   position: absolute;
   width: 100%;
@@ -323,7 +326,7 @@ function Slide({ data, category, type, url }: ISlider) {
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
     data?.results.find(
-      (movie: any) => movie.id === +bigMovieMatch.params.movieId
+      (movie: IMovie) => movie.id === +bigMovieMatch.params.movieId
     );
 
   //영화, tv 쇼 세부 정보 fetch
@@ -332,12 +335,12 @@ function Slide({ data, category, type, url }: ISlider) {
     () => getDetail(category, bigMovieMatch?.params.movieId)
   );
   //영화, tv 쇼 비슷한 컨텐츠 fetch
-  const { data: similar } = useQuery<any>(
-    ["similars", `sijilar_${bigMovieMatch?.params.movieId}`],
+  const { data: similar } = useQuery<IGetMovieResult>(
+    ["similars", `similar_${bigMovieMatch?.params.movieId}`],
     () => getSimilar(category, bigMovieMatch?.params.movieId)
   );
   //영화, tv 쇼 크레딧 fetch
-  const { data: credits } = useQuery<any>(
+  const { data: credits } = useQuery<ICredit>(
     ["credits", `credit_${bigMovieMatch?.params.movieId}`],
     () => getCredits(category, bigMovieMatch?.params.movieId)
   );
@@ -371,7 +374,7 @@ function Slide({ data, category, type, url }: ISlider) {
               >
                 {data?.results
                   .slice(offset * index, offset * index + offset)
-                  .map((movie: any) => (
+                  .map((movie: IMovie) => (
                     <Box
                       layoutId={`${movie.id}${type}`}
                       key={movie.id}
@@ -456,7 +459,7 @@ function Slide({ data, category, type, url }: ISlider) {
                         </GenresList>
                         <CreditList>
                           <span>출연: </span>
-                          {credits?.cast.slice(0, 3).map((actor: any) => (
+                          {credits?.cast.slice(0, 3).map((actor: ICast) => (
                             <li key={actor.id}>{actor.name},</li>
                           ))}
                         </CreditList>
@@ -470,7 +473,7 @@ function Slide({ data, category, type, url }: ISlider) {
                   ) : null}
                   <SimilarTitle>비슷한 콘텐츠</SimilarTitle>
                   <SimilarWrap>
-                    {similar?.results.slice(0, 9).map((program: any) => (
+                    {similar?.results.slice(0, 9).map((program: IMovie) => (
                       <SimilarBox
                       variants={boxVariants}
                       whileHover="hover"
