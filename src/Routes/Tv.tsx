@@ -8,7 +8,7 @@ import {
 } from "../api";
 import Slide from "../Components/Slide";
 import Banner from "../Components/Banner";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const Wrapper = styled.main`
   background-color: ${props => props.theme.bgDarker};

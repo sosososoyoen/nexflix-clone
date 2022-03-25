@@ -3,14 +3,14 @@ import Header from "./Components/Header";
 import Home from "./Routes/Home";
 import Search from "./Routes/Search";
 import Tv from "./Routes/Tv";
-import { ReactQueryDevtools } from 'react-query/devtools'
+import { ReactQueryDevtools } from "react-query/devtools";
 import styled from "styled-components";
 import { createGlobalStyle } from "styled-components";
-import { darkTheme,lightTheme } from "./theme";
+import { darkTheme, lightTheme } from "./theme";
 import { useRecoilValue } from "recoil";
 import { ThemeProvider } from "styled-components";
 import { isDarkAtom } from "./atom";
-
+import { HelmetProvider } from "react-helmet-async";
 
 const GlobalStyle = createGlobalStyle`
 @font-face {
@@ -72,8 +72,8 @@ table {
 body {
   font-weight: 300;
   font-family: 'Pretendard-Regular', sans-serif;
-  color:${props => props.theme.textDarker};
-  background-color: ${props => props.theme.bgDarker};
+  color:${(props) => props.theme.textDarker};
+  background-color: ${(props) => props.theme.bgDarker};
   line-height: 1.2;
   overflow-x:hidden;
   
@@ -86,40 +86,42 @@ a {
 
 const FooterWrap = styled.footer`
   margin-top: 7rem;
-  width:100%;
+  width: 100%;
   padding: 2rem;
   text-align: center;
   font-size: 12px;
-`
+`;
 
 function App() {
   const isDark = useRecoilValue(isDarkAtom);
   return (
     <>
-    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-    <GlobalStyle />
-    <Router basename={process.env.PUBLIC_URL}>
-
-      <Header />
-      <Switch>
-        <Route path={["/tv","/tv/*/:movieId"]}>
-          <Tv />
-        </Route>
-        <Route path="/search">
-          <Search />
-        </Route>
-        {/* path가 "/"면 route 맨 끝으로 가야함 (리액트 라우터 5.3버젼 한정) */}
-        {/* 이유: "/"가 들어가기만 해도 다 참으로 취급해버려서 home 컨텐츠가 뜸 */}
-        <Route path={["/","/movies/*/:movieId"]}>
-          <Home />
-        </Route>
-      </Switch>
-    </Router>
-    <FooterWrap>Portfollio <br /> hothemp35@gmail.com / Lee Soyeon</FooterWrap>
-    <ReactQueryDevtools initialIsOpen={true} />
-    </ThemeProvider>
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <HelmetProvider>
+          <GlobalStyle />
+          <Router basename={process.env.PUBLIC_URL}>
+            <Header />
+            <Switch>
+              <Route path={["/tv", "/tv/*/:movieId"]}>
+                <Tv />
+              </Route>
+              <Route path="/search">
+                <Search />
+              </Route>
+              {/* path가 "/"면 route 맨 끝으로 가야함 (리액트 라우터 5.3버젼 한정) */}
+              {/* 이유: "/"가 들어가기만 해도 다 참으로 취급해버려서 home 컨텐츠가 뜸 */}
+              <Route path={["/", "/movies/*/:movieId"]}>
+                <Home />
+              </Route>
+            </Switch>
+          </Router>
+          <FooterWrap>
+            Portfollio <br /> hothemp35@gmail.com / Lee Soyeon
+          </FooterWrap>
+          <ReactQueryDevtools initialIsOpen={true} />
+        </HelmetProvider>
+      </ThemeProvider>
     </>
-
   );
 }
 

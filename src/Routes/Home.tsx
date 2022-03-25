@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { getMovies, getPopularMovies, getTopRatedMovies, getUpcommingMovies, IGetMovieResult } from "../api";
 import Slide from "../Components/Slide";
 import Banner from "../Components/Banner";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
+import Modal from "../Components/Modal";
 
 const Wrapper = styled.main`
   background-color: ${props => props.theme.bgDarker};

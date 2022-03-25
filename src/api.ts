@@ -1,4 +1,6 @@
-const API_KEY = "a09449c148c25d33a90a05be31587c64";
+import dotenv from "dotenv"
+
+const API_KEY = process.env.REACT_APP_API_KEY;
 const BASE_PATH = "https://api.themoviedb.org/3";
 
 export interface IMovie {
@@ -110,17 +112,17 @@ export function getSearchShows(query:string|null){
     `${BASE_PATH}/search/tv?api_key=${API_KEY}&language=ko&query=${query}}&page=1&include_adult=false`
   ).then((response) => response.json());
 }
-export function getDetail(category:string|undefined,movieId:string|undefined){
+export function getDetail(category?:string,movieId?:string){
   return fetch(
     `${BASE_PATH}/${category}/${movieId}?api_key=${API_KEY}&language=ko`
   ).then((response) => response.json());
 }
-export function getSimilar(category:string|undefined,movieId:string|undefined){
+export function getSimilar(category?:string,movieId?:string){
   return fetch(
     `${BASE_PATH}/${category}/${movieId}/similar?api_key=${API_KEY}&language=ko`
   ).then((response) => response.json());
 }
-export function getCredits(category:string|undefined,movieId:string|undefined){
+export function getCredits(category?:string,movieId?:string){
   return fetch(
     `${BASE_PATH}/${category}/${movieId}/credits?api_key=${API_KEY}&language=ko`
   ).then((response) => response.json());
