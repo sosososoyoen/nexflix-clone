@@ -13,7 +13,7 @@ const Nav = styled(motion.nav)`
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  width: 100%;
+  width: 100vw;
   top: 0;
   background-color: ${(props) => props.theme.bgLighter};
   padding: 20px 60px;
@@ -36,6 +36,7 @@ const Logo = styled(motion.svg)`
     stroke-width: 10px;
     stroke: white;
   }
+
 `;
 
 const Items = styled.ul`
@@ -152,7 +153,7 @@ function Header() {
   // 입력폼
   const history = useHistory();
   const { register, handleSubmit } = useForm<IForm>();
-  const onValid = (data:IForm) => {
+  const onValid = (data: IForm) => {
     console.log(data);
     history.push(`/search?keyword=${data.keyword}`);
   };
@@ -179,8 +180,8 @@ function Header() {
         <Items>
           <Item>
             <Link to="/">
-              {/* homeMatch가 있고, ixExact가 true면 Circle 표시 */}
-              홈 {homeMatch?.isExact && <Circle layoutId="circle" />}
+              {/* homeMatch가 있고, ixExact가 true면 Circle 표시 */}홈{" "}
+              {homeMatch?.isExact && <Circle layoutId="circle" />}
             </Link>
           </Item>
           <Item>
@@ -207,7 +208,7 @@ function Header() {
             ></path>
           </motion.svg>
           <Input
-            {...register("keyword",{required:true, minLength:2})}
+            {...register("keyword", { required: true, minLength: 2 })}
             animate={inputAnimaion}
             initial={{ scaleX: 0 }}
             transition={{ type: "linear" }}

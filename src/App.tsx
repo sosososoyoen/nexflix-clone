@@ -75,6 +75,7 @@ body {
   color:${(props) => props.theme.textDarker};
   background-color: ${(props) => props.theme.bgDarker};
   line-height: 1.2;
+  width:100%;
   overflow-x:hidden;
   
 }
@@ -91,6 +92,7 @@ const FooterWrap = styled.footer`
   text-align: center;
   font-size: 12px;
 `;
+
 
 function App() {
   const isDark = useRecoilValue(isDarkAtom);

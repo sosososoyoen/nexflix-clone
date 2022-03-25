@@ -6,6 +6,7 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
 import { makeImagePath } from "../Routes/Utils";
 import Modal from "./Modal";
+import { wrap } from "popmotion";
 
 const Wrapper = styled.article`
   background-color: black;
@@ -24,6 +25,10 @@ const Row = styled(motion.div)`
   position: absolute;
   width: 100%;
   height: 100%;
+  @media only screen and (max-width: 1024px) {
+    /* overflow-y: hidden; */
+    /* grid-template-columns: repeat(3, 1fr); */
+  }
 `;
 
 const Box = styled(motion.div)<{ bigphoto: string }>`
@@ -40,6 +45,7 @@ const Box = styled(motion.div)<{ bigphoto: string }>`
   &:last-child {
     transform-origin: center right;
   }
+  
 `;
 
 const SlideBtn = styled.button`
@@ -95,7 +101,8 @@ const infoVariants = {
   },
 };
 
-const offset = 6;
+const offset = 6; 
+
 export interface ISlider {
   data: any;
   category: string;
@@ -163,6 +170,12 @@ function Slide({ data, category, type, url }: ISlider) {
     history.push(`/${category}/${type}/${movieId}`);
   };
   const detailMatch = useRouteMatch(`/${category}/${type}/:movieId`);
+  
+  //slide drag 
+  const swipeConfidenceThreshold = 1000;
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity;
+  };
 
   return (
     <Wrapper>
@@ -181,6 +194,7 @@ function Slide({ data, category, type, url }: ISlider) {
               custom={back}
               initial={false}
               onExitComplete={toggleLeaving}
+
             >
               <Row
                 custom={back}
@@ -190,6 +204,18 @@ function Slide({ data, category, type, url }: ISlider) {
                 exit="exit"
                 transition={{ type: "tween", duration: 1 }}
                 key={index}
+                drag="x"
+                dragElastic={1}
+                dragConstraints={{ left: 0, right: 0 }}
+                onDragEnd={(event, { offset, velocity }) => {
+                  console.log(offset.x, velocity.x)
+                  const swipe = swipePower(offset.x,velocity.x);
+                  if (swipe < -swipeConfidenceThreshold) {
+                    increaseIndex();
+                  } else if (swipe > swipeConfidenceThreshold) {
+                    decreaseIndex();
+                  }
+                }}
               >
                 {data?.results
                   .slice(offset * index, offset * index + offset)

@@ -35,11 +35,20 @@ const BigMovie = styled(motion.div)`
   &::-webkit-scrollbar {
     display: none;
   }
+  @media only screen and (max-width: 1024px) {
+    width: 80vw;
+    font-size: 90%;
+  }
+  @media only screen and (max-width: 425px) {
+    width: 95vw;
+    height: 100vh;
+    font-size: 70%;
+  }
 `;
 const Runtime = styled.span`
   margin-left: 1rem;
   svg {
-    font-size: 20px;
+    font-size: 1.25rem;
     color: #4cd137;
     margin-right: 5px;
   }
@@ -96,7 +105,7 @@ const Bigdate = styled.div`
 const BigTitle = styled.hgroup`
   h3 {
     color: ${(props) => props.theme.text};
-    font-size: 46px;
+    font-size: 2.8rem;
     position: relative;
     top: -80px;
     font-weight: 600;
