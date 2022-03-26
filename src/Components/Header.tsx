@@ -20,6 +20,12 @@ const Nav = styled(motion.nav)`
   color: ${(props) => props.theme.text};
   text-shadow: black 1px 1px 10px;
   z-index: 9;
+  @media only screen and (max-width: 768px) {
+    padding: 20px 40px;
+  }
+  @media only screen and (max-width: 625px) {
+    padding: 20px;
+  }
 `;
 
 const Col = styled.div`
@@ -36,7 +42,10 @@ const Logo = styled(motion.svg)`
     stroke-width: 10px;
     stroke: white;
   }
-
+  @media only screen and (max-width: 425px) {
+    width: 70px;
+    margin-right: 16px;
+  }
 `;
 
 const Items = styled.ul`
@@ -64,11 +73,14 @@ const Search = styled.form`
   color: white;
   svg {
     height: 25px;
+    position: absolute;
+    z-index: 9;
   }
   display: flex;
   align-items: center;
   position: relative;
   cursor: pointer;
+  margin-right: 16px;
 `;
 const Input = styled(motion.input)`
   transform-origin: right center;
@@ -79,7 +91,8 @@ const Input = styled(motion.input)`
   z-index: -1;
   color: white;
   font-size: 16px;
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 5;
   border: 1px solid ${(props) => props.theme.textDarker};
 `;
 
@@ -195,7 +208,7 @@ function Header() {
         <Search onSubmit={handleSubmit(onValid)}>
           <motion.svg
             onClick={toggleSearch}
-            animate={{ x: searchOpen ? -215 : 0 }}
+            animate={{ x: searchOpen ? -240 : 0 }}
             transition={{ type: "linear" }}
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -212,7 +225,7 @@ function Header() {
             animate={inputAnimaion}
             initial={{ scaleX: 0 }}
             transition={{ type: "linear" }}
-            placeholder="Search for movie or tv shows..."
+            placeholder="영화, 시리즈 제목"
           />
         </Search>
       </Col>

@@ -25,13 +25,13 @@ const Title = styled.h2`
   }
 `;
 const Overview = styled.p`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   width: 45%;
   @media only screen and (max-width: 1024px){
   width: 50%;
   font-size: 1rem;
   }
-  @media only screen and (max-width: 425px) {
+  @media only screen and (max-width: 625px) {
     display: none;
   }
 `;

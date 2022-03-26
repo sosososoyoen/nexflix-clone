@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { IMovie } from "../api";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
 import { makeImagePath } from "../Routes/Utils";
@@ -10,11 +10,18 @@ import { wrap } from "popmotion";
 
 const Wrapper = styled.article`
   background-color: black;
+  @media only screen and (max-width: 1024px) {
+    font-size: 80%;
+  }
+  @media only screen and (max-width: 425px) {
+    font-size: 60%;
+  }
 `;
 
 const Slider = styled.div`
-  height: 200px;
+  height: 12.5em;
   position: relative;
+  
 `;
 
 const Row = styled(motion.div)`
@@ -26,8 +33,7 @@ const Row = styled(motion.div)`
   width: 100%;
   height: 100%;
   @media only screen and (max-width: 1024px) {
-    /* overflow-y: hidden; */
-    /* grid-template-columns: repeat(3, 1fr); */
+    grid-template-columns: repeat(4, 1fr);
   }
 `;
 
@@ -63,6 +69,10 @@ const SlideBtn = styled.button`
   &:hover {
     opacity: 1;
   }
+  @media only screen and (max-width: 1024px) {
+    display: none;
+  }
+  
 `;
 
 const Info = styled(motion.div)`
@@ -101,7 +111,7 @@ const infoVariants = {
   },
 };
 
-const offset = 6; 
+
 
 export interface ISlider {
   data: any;
@@ -137,6 +147,7 @@ function Slide({ data, category, type, url }: ISlider) {
     },
   };
   // 슬라이드 관련 state
+  const [offset, setOffset] = useState(6)
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [back, setBack] = useState(false);
@@ -172,10 +183,37 @@ function Slide({ data, category, type, url }: ISlider) {
   const detailMatch = useRouteMatch(`/${category}/${type}/:movieId`);
   
   //slide drag 
+
   const swipeConfidenceThreshold = 1000;
   const swipePower = (offset: number, velocity: number) => {
     return Math.abs(offset) * velocity;
   };
+
+  //mobile
+  const [isMobile,setIsMobile] = useState(false);
+  // 리사이즈 이벤트를 감지하여 가로 길이에 따라 모바일 여부 결정
+  const resizingHandler = () => {
+    if (window.innerWidth <= 1024) {
+      setIsMobile(true);
+      setOffset(4)
+    } else {
+      setIsMobile(false);
+      setOffset(6)
+    }
+  };
+  // 우선 맨 처음 1024면 모바일 처리
+  useEffect(() => {
+    if (window.innerWidth <= 1024) {
+      setIsMobile(true);
+      setOffset(4);
+    }
+    
+    window.addEventListener("resize", resizingHandler);
+    return () => {
+      // 메모리 누수를 줄이기 위한 removeEvent
+      window.removeEventListener("resize", resizingHandler);
+    };
+  }, []);
 
   return (
     <Wrapper>
@@ -194,7 +232,6 @@ function Slide({ data, category, type, url }: ISlider) {
               custom={back}
               initial={false}
               onExitComplete={toggleLeaving}
-
             >
               <Row
                 custom={back}
@@ -204,9 +241,10 @@ function Slide({ data, category, type, url }: ISlider) {
                 exit="exit"
                 transition={{ type: "tween", duration: 1 }}
                 key={index}
-                drag="x"
-                dragElastic={1}
-                dragConstraints={{ left: 0, right: 0 }}
+                {...(isMobile && {drag:"x",
+                dragElastic:1,
+                dragConstraints:{ left: 0, right: 0 },
+              })}
                 onDragEnd={(event, { offset, velocity }) => {
                   console.log(offset.x, velocity.x)
                   const swipe = swipePower(offset.x,velocity.x);

@@ -77,7 +77,10 @@ body {
   line-height: 1.2;
   width:100%;
   overflow-x:hidden;
-  
+  position: relative;
+}
+html {
+  overflow-x: hidden;
 }
 a {
   text-decoration:none;
