@@ -52,7 +52,7 @@ function Home() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner data={popularShows} />
+          <Banner data={popularShows} category="tv" />
           <SlideTitle>인기 시리즈</SlideTitle>
           <Slide data={popularShows} category="tv" type="popular" url="tv" />
           <SlideWrap>

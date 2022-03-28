@@ -1,12 +1,11 @@
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { IMovie } from "../api";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
 import { makeImagePath } from "../Routes/Utils";
 import Modal from "./Modal";
-import { wrap } from "popmotion";
 
 const Wrapper = styled.article`
   background-color: black;

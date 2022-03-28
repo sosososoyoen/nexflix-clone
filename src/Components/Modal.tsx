@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
+import { motion, useViewportScroll } from "framer-motion";
 import {
   getCredits,
   getDetail,
@@ -10,13 +10,13 @@ import {
   IGetMovieResult,
   IMovie,
 } from "../api";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useRouteMatch } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import { BiCameraMovie } from "react-icons/bi";
 import { makeImagePath } from "../Routes/Utils";
 import { useQuery } from "react-query";
 import { ISlider } from "./Slide";
-import { forwardRef, useImperativeHandle } from "react";
+import FavBtn from "./FavBtn";
 
 
 const BigMovie = styled(motion.div)`
@@ -28,7 +28,7 @@ const BigMovie = styled(motion.div)`
   right: 0;
   margin: 0 auto;
   border-radius: 15px;
-  overflow: auto;
+  overflow-x: hidden;
   z-index: 99;
   background-color: ${(props) => props.theme.bgLighter};
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
@@ -81,6 +81,7 @@ const BigCover = styled.div`
   background-size: cover;
   background-position: center center;
   height: 400px;
+  position: relative;
 `;
 const BigVote = styled.p`
   display: flex;
@@ -207,7 +208,6 @@ function Modal({ data, category, type, url }: ISlider) {
     data?.results.find(
       (movie: IMovie) => movie.id === +bigMovieMatch.params.movieId
     );
-
   //영화, tv 쇼 세부 정보 fetch
   const { data: detail } = useQuery<IDetail>(
     ["details", `detail_${bigMovieMatch?.params.movieId}`],
@@ -241,6 +241,7 @@ function Modal({ data, category, type, url }: ISlider) {
                     )})`,
                   }}
                 />
+                {/* <FavBtn id={bigMovieMatch?.params.movieId} movie={bigMovieMatch} category={category} /> */}
                 <DetailWrap>
                   <BigTitle>
                     <h4>

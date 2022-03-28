@@ -4,7 +4,6 @@ import { getMovies, getPopularMovies, getTopRatedMovies, getUpcommingMovies, IGe
 import Slide from "../Components/Slide";
 import Banner from "../Components/Banner";
 import { Helmet } from "react-helmet-async";
-import Modal from "../Components/Modal";
 
 const Wrapper = styled.main`
   background-color: ${props => props.theme.bgDarker};
@@ -54,7 +53,7 @@ function Home() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner data={nowPlaying} />
+          <Banner data={nowPlaying} category="movie" />
           <SlideTitle>상영 중인 영화</SlideTitle>
           <Slide data={nowPlaying} type="nowPlaying" category="movie" url="" />
           <SlideWrap>
