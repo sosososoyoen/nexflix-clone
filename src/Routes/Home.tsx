@@ -53,7 +53,7 @@ function Home() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner data={nowPlaying} category="movie" />
+          <Banner data={popularMovie} category="movie" />
           <SlideTitle>상영 중인 영화</SlideTitle>
           <Slide data={nowPlaying} type="nowPlaying" category="movie" url="" />
           <SlideWrap>

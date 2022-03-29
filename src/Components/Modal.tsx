@@ -18,7 +18,6 @@ import { useQuery } from "react-query";
 import { ISlider } from "./Slide";
 import FavBtn from "./FavBtn";
 
-
 const BigMovie = styled(motion.div)`
   position: absolute;
   width: 40vw;
@@ -65,7 +64,7 @@ const HompageBtn = styled.button`
   margin-left: 1rem;
 `;
 const BigTagline = styled.span`
-display: block;
+  display: block;
   font-size: 1.25rem;
   line-height: 2;
 `;
@@ -240,8 +239,14 @@ function Modal({ data, category, type, url }: ISlider) {
                       clickedMovie.backdrop_path
                     )})`,
                   }}
-                />
-                {/* <FavBtn id={bigMovieMatch?.params.movieId} movie={bigMovieMatch} category={category} /> */}
+                >
+                  <FavBtn
+                    id={clickedMovie.id}
+                    movie={clickedMovie}
+                    url={bigMovieMatch.url}
+                  />
+
+                </BigCover>
                 <DetailWrap>
                   <BigTitle>
                     <h4>
@@ -319,7 +324,7 @@ function Modal({ data, category, type, url }: ISlider) {
           </BigMovie>
         </>
       ) : null}
-      </>
+    </>
   );
 }
 export default Modal;

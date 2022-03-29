@@ -19,7 +19,12 @@ and using `Framer-motion`, I made Slider and Modal Animations.
   
   * 모바일 해상도 한정 슬라이더를 터치해서 드래그하는 기능 추가
 * 영화, 시리즈 검색 기능 구현
-* 현재 찜하기 기능을 만들고 있습니다. 
+  
+* 찜하기 기능
+  ![capture_03](https://user-images.githubusercontent.com/55690712/160715698-357192d2-35c1-4790-90d3-5c274e4974fe.PNG)
+  ![capture_04](https://user-images.githubusercontent.com/55690712/160715822-9d9d5d11-7ea3-42a9-a819-c6ada557c91a.PNG)
+  * 찜하기 버튼을 누르면 LocalStorage에 해당 콘텐츠의 정보가 저장되어 **내가 찜한 콘텐츠** 페이지에 표시됩니다.
+  * (찜한 콘텐츠 박스를 클릭했을 때 해당 영화의 정보가 나오도록 작업중)
 * 반응형 웹사이트입니다.
 
 ## Technologies and libraries used for projects

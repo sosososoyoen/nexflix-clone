@@ -163,6 +163,7 @@ function Header() {
   // useRouteMatch: 해당 주소가 맞으면 object 반환 아니면 null
   const homeMatch = useRouteMatch("/");
   const tvMatch = useRouteMatch("/tv");
+  const favMatch = useRouteMatch("/my-list");
   // 입력폼
   const history = useHistory();
   const { register, handleSubmit } = useForm<IForm>();
@@ -200,6 +201,11 @@ function Header() {
           <Item>
             <Link to="/tv">
               시리즈 {tvMatch && <Circle layoutId="circle" />}
+            </Link>
+          </Item>
+          <Item>
+            <Link to="/my-list">
+              내가 찜한 콘텐츠 {favMatch && <Circle layoutId="circle" />}
             </Link>
           </Item>
         </Items>
