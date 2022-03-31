@@ -16,6 +16,8 @@ export interface IMovie {
   first_air_date?: string;
   vote_average: number;
   url?:string;
+  type?:string;
+  category?:string;
 }
 export interface IDetail {
   genres: IGenres[],

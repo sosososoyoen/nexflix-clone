@@ -111,7 +111,7 @@ function App() {
               <Route path={["/tv", "/tv/*/:movieId"]}>
                 <Tv />
               </Route>
-              <Route path={"/my-list"}>
+              <Route path={["/my-list","/my-list/*/*/:movieId"]}>
                 <FavList />
               </Route>
               <Route path="/search">
@@ -128,7 +128,6 @@ function App() {
           <FooterWrap>
             Portfollio <br /> hothemp35@gmail.com / Lee Soyeon
           </FooterWrap>
-          <ReactQueryDevtools initialIsOpen={true} />
         </HelmetProvider>
       </ThemeProvider>
     </>

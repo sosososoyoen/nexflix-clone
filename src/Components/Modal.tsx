@@ -10,13 +10,24 @@ import {
   IGetMovieResult,
   IMovie,
 } from "../api";
-import { useRouteMatch } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import { BiCameraMovie } from "react-icons/bi";
 import { makeImagePath } from "../Routes/Utils";
 import { useQuery } from "react-query";
 import { ISlider } from "./Slide";
 import FavBtn from "./FavBtn";
+import { useState } from "react";
+
+const Overlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  opacity: 0;
+  z-index: 99;
+`;
 
 const BigMovie = styled(motion.div)`
   position: absolute;
@@ -45,9 +56,9 @@ const BigMovie = styled(motion.div)`
   }
 `;
 const Runtime = styled.span`
-  margin-left: 1rem;
+  margin-left: 1em;
   svg {
-    font-size: 1.25rem;
+    font-size: 1.25em;
     color: #4cd137;
     margin-right: 5px;
   }
@@ -55,21 +66,21 @@ const Runtime = styled.span`
 const HompageBtn = styled.button`
   background-color: ${(props) => props.theme.red};
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.5em 1em;
   border-radius: 10px;
   color: white;
   font-weight: bold;
   cursor: pointer;
   justify-self: flex-end;
-  margin-left: 1rem;
+  margin-left: 1em;
 `;
 const BigTagline = styled.span`
   display: block;
-  font-size: 1.25rem;
+  font-size: 1.25em;
   line-height: 2;
 `;
 const BigOverview = styled.p`
-  padding-top: 1.5rem;
+  padding-top: 1.5em;
   color: ${(props) => props.theme.text};
 `;
 const DetailWrap = styled.div`
@@ -81,21 +92,22 @@ const BigCover = styled.div`
   background-position: center center;
   height: 400px;
   position: relative;
+  display: flex;
 `;
 const BigVote = styled.p`
   display: flex;
   align-items: center;
-  font-size: 2rem;
+  font-size: 2em;
   svg {
-    font-size: 1.5rem;
+    font-size: 1.5em;
     color: #e1b12c;
   }
   span {
-    font-size: 1rem;
+    font-size: 1em;
   }
 `;
 const Bigdate = styled.div`
-  font-size: 1rem;
+  font-size: 1em;
   position: relative;
   top: -30px;
   display: flex;
@@ -103,9 +115,10 @@ const Bigdate = styled.div`
   align-items: center;
 `;
 const BigTitle = styled.hgroup`
+
   h3 {
     color: ${(props) => props.theme.text};
-    font-size: 2.8rem;
+    font-size: 2.8em;
     position: relative;
     top: -80px;
     font-weight: 600;
@@ -124,10 +137,10 @@ const SimilarWrap = styled.div`
   justify-content: space-around;
 `;
 const SimilarTitle = styled.h3`
-  margin-top: 3rem;
+  margin-top: 3em;
   padding: 0 20px;
   font-weight: 600;
-  font-size: 1.5rem;
+  font-size: 1.5em;
 `;
 const SimilarBox = styled(motion.div)<{ bigphoto: string }>`
   background-color: gray;
@@ -197,9 +210,12 @@ const infoVariants = {
 };
 
 function Modal({ data, category, type, url }: ISlider) {
+  const history = useHistory();
+  const onOverlayClick = () => history.push(`/${url}`);
   const { scrollY } = useViewportScroll();
+  const [isMyList, setIsMyList] = useState(false);
 
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>(
+  const bigMovieMatch =  useRouteMatch<{ movieId: string }>(
     `/${category}/${type}/:movieId`
   );
   const clickedMovie =
@@ -208,9 +224,10 @@ function Modal({ data, category, type, url }: ISlider) {
       (movie: IMovie) => movie.id === +bigMovieMatch.params.movieId
     );
   //영화, tv 쇼 세부 정보 fetch
-  const { data: detail } = useQuery<IDetail>(
+  const { data: detail, error:detailError } = useQuery<IDetail>(
     ["details", `detail_${bigMovieMatch?.params.movieId}`],
-    () => getDetail(category, bigMovieMatch?.params.movieId)
+    () => getDetail(category, bigMovieMatch?.params.movieId),
+    
   );
   //영화, tv 쇼 비슷한 컨텐츠 fetch
   const { data: similar } = useQuery<IGetMovieResult>(
@@ -227,6 +244,11 @@ function Modal({ data, category, type, url }: ISlider) {
     <>
       {bigMovieMatch && data ? (
         <>
+          <Overlay
+            onClick={onOverlayClick}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
           <BigMovie
             style={{ top: scrollY.get() + 100 }}
             layoutId={`${bigMovieMatch.params.movieId}${type}`}
@@ -243,9 +265,10 @@ function Modal({ data, category, type, url }: ISlider) {
                   <FavBtn
                     id={clickedMovie.id}
                     movie={clickedMovie}
-                    url={bigMovieMatch.url}
+                    url={url}
+                    type={type}
+                    category={category}
                   />
-
                 </BigCover>
                 <DetailWrap>
                   <BigTitle>

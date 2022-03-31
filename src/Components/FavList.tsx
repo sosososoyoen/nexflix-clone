@@ -4,6 +4,8 @@ import { favState } from "../atom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { makeImagePath } from "../Routes/Utils";
+import Modal from "./Modal";
+import { ISlider } from "./Slide";
 
 const Wrapper = styled.article`
   background-color: black;
@@ -76,8 +78,12 @@ const infoVariants = {
 function FavList() {
   const history = useHistory();
   const favourites = useRecoilValue(favState);
-  const onBoxClicked = (url: string | undefined) => {
-    // history.push(`${url}`);
+  const onBoxClicked = (
+    type: string | undefined,
+    category: string | undefined,
+    id: number | undefined
+  ) => {
+    history.push(`/${category}/${type}/${id}`);
   };
   const boxVariants = {
     normal: {
@@ -97,23 +103,32 @@ function FavList() {
         <Row>
           {favourites !== []
             ? favourites?.map((movie) => (
-                
                 <Box
-                  layoutId={`fav${movie.id}`}
+                  layoutId={`${movie.id}fav`}
                   key={movie.id}
                   whileHover="hover"
                   initial="normal"
                   transition={{ type: "tween" }}
-                  onClick={() => onBoxClicked(movie?.url)}
+                  onClick={() =>
+                    onBoxClicked(movie.type, movie.category, movie.id)
+                  }
                   variants={boxVariants}
                   bigphoto={makeImagePath(movie.backdrop_path, "w400")}
                 >
                   <Info variants={infoVariants}>
                     <h4>{movie.title || movie.name}</h4>
                   </Info>
+                  <AnimatePresence>
+                    <Modal
+                      data={movie}
+                      type={movie.type}
+                      category={movie.category}
+                      url="/my-list"
+                    />
+                  </AnimatePresence>
                 </Box>
               ))
-            : null}
+            : "Loading..."}
         </Row>
       </List>
     </Wrapper>

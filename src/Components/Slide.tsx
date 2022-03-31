@@ -20,7 +20,6 @@ const Wrapper = styled.article`
 const Slider = styled.div`
   height: 12.5em;
   position: relative;
-  
 `;
 
 const Row = styled(motion.div)`
@@ -50,7 +49,6 @@ const Box = styled(motion.div)<{ bigphoto: string }>`
   &:last-child {
     transform-origin: center right;
   }
-  
 `;
 
 const SlideBtn = styled.button`
@@ -71,7 +69,6 @@ const SlideBtn = styled.button`
   @media only screen and (max-width: 1024px) {
     display: none;
   }
-  
 `;
 
 const Info = styled(motion.div)`
@@ -88,16 +85,6 @@ const Info = styled(motion.div)`
   }
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 `;
-const Overlay = styled(motion.div)`
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.85);
-  opacity: 0;
-  z-index: 99;
-`;
-
 // animations
 const infoVariants = {
   hover: {
@@ -110,17 +97,14 @@ const infoVariants = {
   },
 };
 
-
-
 export interface ISlider {
   data: any;
-  category: string;
-  url: string;
-  type: string;
+  category?: string;
+  url?: string;
+  type?: string;
 }
 function Slide({ data, category, type, url }: ISlider) {
   const history = useHistory();
-  const onOverlayClick = () => history.push(`/${url}`);
   const rowVariants = {
     hidden: (back: boolean) => ({
       x: back ? -window.outerWidth - 5 : window.outerWidth + 5,
@@ -146,7 +130,7 @@ function Slide({ data, category, type, url }: ISlider) {
     },
   };
   // 슬라이드 관련 state
-  const [offset, setOffset] = useState(6)
+  const [offset, setOffset] = useState(6);
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [back, setBack] = useState(false);
@@ -180,8 +164,8 @@ function Slide({ data, category, type, url }: ISlider) {
     history.push(`/${category}/${type}/${movieId}`);
   };
   const detailMatch = useRouteMatch(`/${category}/${type}/:movieId`);
-  
-  //slide drag 
+
+  //slide drag
 
   const swipeConfidenceThreshold = 1000;
   const swipePower = (offset: number, velocity: number) => {
@@ -189,15 +173,15 @@ function Slide({ data, category, type, url }: ISlider) {
   };
 
   //mobile
-  const [isMobile,setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   // 리사이즈 이벤트를 감지하여 가로 길이에 따라 모바일 여부 결정
   const resizingHandler = () => {
     if (window.innerWidth <= 1024) {
       setIsMobile(true);
-      setOffset(4)
+      setOffset(4);
     } else {
       setIsMobile(false);
-      setOffset(6)
+      setOffset(6);
     }
   };
   // 우선 맨 처음 1024면 모바일 처리
@@ -206,7 +190,7 @@ function Slide({ data, category, type, url }: ISlider) {
       setIsMobile(true);
       setOffset(4);
     }
-    
+
     window.addEventListener("resize", resizingHandler);
     return () => {
       // 메모리 누수를 줄이기 위한 removeEvent
@@ -240,13 +224,14 @@ function Slide({ data, category, type, url }: ISlider) {
                 exit="exit"
                 transition={{ type: "tween", duration: 1 }}
                 key={index}
-                {...(isMobile && {drag:"x",
-                dragElastic:1,
-                dragConstraints:{ left: 0, right: 0 },
-              })}
+                {...(isMobile && {
+                  drag: "x",
+                  dragElastic: 1,
+                  dragConstraints: { left: 0, right: 0 },
+                })}
                 onDragEnd={(event, { offset, velocity }) => {
-                  console.log(offset.x, velocity.x)
-                  const swipe = swipePower(offset.x,velocity.x);
+                  console.log(offset.x, velocity.x);
+                  const swipe = swipePower(offset.x, velocity.x);
                   if (swipe < -swipeConfidenceThreshold) {
                     increaseIndex();
                   } else if (swipe > swipeConfidenceThreshold) {
@@ -275,18 +260,11 @@ function Slide({ data, category, type, url }: ISlider) {
               </Row>
             </AnimatePresence>
           </Slider>
-          <AnimatePresence>
-            {detailMatch ? (
-              <>
-                <Overlay
-                  onClick={onOverlayClick}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                />
-                <Modal data={data} type={type} category={category} url={url} />
-              </>
-            ) : null}
-          </AnimatePresence>
+          {detailMatch ? (
+            <AnimatePresence>
+              <Modal data={data} type={type} category={category} url={url} />
+            </AnimatePresence>
+          ) : null}
         </>
       )}
     </Wrapper>

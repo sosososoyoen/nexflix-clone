@@ -29,9 +29,11 @@ const Favbutton = styled.button`
 interface IFav {
   id: number;
   movie: IMovie;
-  url: string;
+  url?: string;
+  type?:string;
+  category?:string;
 }
-function FavBtn({ id, movie, url }: IFav) {
+function FavBtn({ id, movie, url, type,category }: IFav) {
   const [favourites, setFavourites] = useRecoilState(favState);
   // favMovie: 찜 목록에 해당 movie가 있는지 확인
   // true => 꽉찬 하트 아이콘 false => 빈 하트
@@ -46,7 +48,7 @@ function FavBtn({ id, movie, url }: IFav) {
           String(movie.id) === String(result.id)
       ) === -1
     ) {
-      setFavourites((oldFavourites) => [...oldFavourites, {...movie, url}]);
+      setFavourites((oldFavourites) => [...oldFavourites, {...movie, url,type,category}]);
     } else {
       //찜 상태인 경우 => 찜 목록에서 삭제
       setFavourites((oldFavourites) =>
