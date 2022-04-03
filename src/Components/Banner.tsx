@@ -21,16 +21,27 @@ const BannerWrap = styled.div<{ bgPhoto: string }>`
     url(${(props) => props.bgPhoto});
   background-size: cover;
   background-position: center;
+  @media only screen and (max-width: 625px) {
+    flex-direction: column-reverse;
+    justify-content: center;
+  }
 `;
 const InfoWrap = styled.div`
   width: 60%;
+  @media only screen and (max-width: 625px) {
+    width: 100%;
+  }
 `;
 const YouTubeWrap = styled.div`
   width: 60%;
+  @media only screen and (max-width: 625px) {
+    width: 100%;
+    margin-bottom: 2em;
+  }
   iframe {
     @media only screen and (max-width: 1024px) {
-      width: 90%;
-    }
+    width: 100%;
+  }
   }
 `;
 const Title = styled.h2`
@@ -84,6 +95,9 @@ margin-top: 1rem;
   }
   svg{
     margin-right: 0.5rem;
+  }
+  @media only screen and (max-width: 1024px) {
+    font-size: 1rem;
   }
 `
 

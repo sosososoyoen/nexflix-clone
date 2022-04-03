@@ -25,6 +25,11 @@ const Nav = styled(motion.nav)`
   }
   @media only screen and (max-width: 625px) {
     padding: 20px;
+    font-size:80%;
+  }
+  @media only screen and (max-width: 425px) {
+    padding: 20px;
+    font-size:70%;
   }
 `;
 

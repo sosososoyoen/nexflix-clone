@@ -4,21 +4,15 @@ import {
   getCredits,
   getDetail,
   getSimilar,
-  ICast,
   ICredit,
   IDetail,
   IGetMovieResult,
   IMovie,
 } from "../api";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { FaStar } from "react-icons/fa";
-import { BiCameraMovie } from "react-icons/bi";
-import { makeImagePath } from "../Routes/Utils";
 import { useQuery } from "react-query";
 import { ISlider } from "./Slide";
-import FavBtn from "./FavBtn";
 import {AnimatePresence } from "framer-motion";
-import { useState } from "react";
 
 const Overlay = styled(motion.div)`
   position: fixed;
@@ -217,8 +211,6 @@ function FavModal({ data, category, type, url }: ISlider) {
   const bigMovieMatch =  useRouteMatch<{ movieId: string }>(
     `/my-list/${type}/:movieId`
   );
-  console.log(bigMovieMatch);
-  console.log(data);
   
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
