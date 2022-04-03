@@ -7,8 +7,8 @@ import {
   IGetMovieResult,
 } from "../api";
 import Slide from "../Components/Slide";
-import Banner from "../Components/Banner";
 import { Helmet } from "react-helmet-async";
+import TvBanner from "../Components/TvBanner";
 
 const Wrapper = styled.main`
   background-color: ${props => props.theme.bgDarker};
@@ -42,6 +42,8 @@ function Home() {
     getOnAirShows
   );
 
+
+
   return (
     <Wrapper>
       <Helmet>
@@ -52,7 +54,7 @@ function Home() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner data={popularShows} category="tv" />
+          <TvBanner data={popularShows} category="tv" />
           <SlideTitle>인기 시리즈</SlideTitle>
           <Slide data={popularShows} category="tv" type="popular" url="tv" />
           <SlideWrap>

@@ -168,7 +168,6 @@ function Header() {
   const history = useHistory();
   const { register, handleSubmit } = useForm<IForm>();
   const onValid = (data: IForm) => {
-    console.log(data);
     history.push(`/search?keyword=${data.keyword}`);
   };
   return (

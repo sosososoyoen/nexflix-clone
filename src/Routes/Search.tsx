@@ -1,5 +1,4 @@
-
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
@@ -10,7 +9,7 @@ import {
   IGetShowResult,
 } from "../api";
 import NotFound from "../Components/NotFound";
-import Slide from "../Components/Slide";
+import SearchResult from "../Components/SearchResult";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -37,21 +36,27 @@ function Search() {
   const location = useLocation();
   const keyword = new URLSearchParams(location.search).get("keyword");
 
-  const { data: searchMovie, isLoading: loadSearchMovie, refetch: refetchMovie} =
-    useQuery<IGetMovieResult>(["search", "searchMovie"], () =>
-      getSearchMovie(keyword)
-    );
-  const { data: searchShows, isLoading: loadSearchShows, refetch: refetchShows } =
-    useQuery<IGetShowResult>(["search", "searchShow"], () =>
-      getSearchShows(keyword)
-    );
-    useEffect(()=>{
-      if(keyword===""){
-        return;
-      }
-      refetchMovie();
-      refetchShows();
-    },[keyword,refetchMovie,refetchShows])
+  const {
+    data: searchMovie,
+    isLoading: loadSearchMovie,
+    refetch: refetchMovie,
+  } = useQuery<IGetMovieResult>(["search", "searchMovie"], () =>
+    getSearchMovie(keyword)
+  );
+  const {
+    data: searchShows,
+    isLoading: loadSearchShows,
+    refetch: refetchShows,
+  } = useQuery<IGetShowResult>(["search", "searchShow"], () =>
+    getSearchShows(keyword)
+  );
+  useEffect(() => {
+    if (keyword === null || "") {
+      return;
+    }
+    refetchMovie();
+    refetchShows();
+  }, [keyword]);
   return (
     <Wrapper>
       {loadSearchMovie && loadSearchShows ? (
@@ -63,7 +68,7 @@ function Search() {
         <>
           <SlideWrap>
             <SlideTitle>영화 검색 결과</SlideTitle>
-            <Slide
+            <SearchResult
               data={searchMovie}
               category="search"
               type="movie"
@@ -72,7 +77,7 @@ function Search() {
           </SlideWrap>
           <SlideWrap>
             <SlideTitle>TV 시리즈 검색 결과</SlideTitle>
-            <Slide
+            <SearchResult
               data={searchShows}
               category="search"
               type="tv"

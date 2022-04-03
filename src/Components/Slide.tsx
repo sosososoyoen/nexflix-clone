@@ -6,6 +6,7 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
 import { makeImagePath } from "../Routes/Utils";
 import Modal from "./Modal";
+import TvModal from "./TvModal";
 
 const Wrapper = styled.article`
   background-color: black;
@@ -116,7 +117,7 @@ function Slide({ data, category, type, url }: ISlider) {
       x: back ? window.outerWidth + 5 : -window.outerWidth - 5,
     }),
   };
-
+// console.log(data);
   const boxVariants = {
     normal: {
       scale: 1,
@@ -161,9 +162,9 @@ function Slide({ data, category, type, url }: ISlider) {
   };
   const toggleLeaving = () => setLeaving((prev) => !prev);
   const onBoxClicked = (movieId: number) => {
-    history.push(`/${category}/${type}/${movieId}`);
+    history.push(`/${url}/${type}/${movieId}`);
   };
-  const detailMatch = useRouteMatch(`/${category}/${type}/:movieId`);
+  
 
   //slide drag
 
@@ -197,6 +198,9 @@ function Slide({ data, category, type, url }: ISlider) {
       window.removeEventListener("resize", resizingHandler);
     };
   }, []);
+  const bigMovieMatch =  useRouteMatch<{ movieId: string }>(
+    `/${url}/${type}/:movieId`
+  );
 
   return (
     <Wrapper>
@@ -230,7 +234,6 @@ function Slide({ data, category, type, url }: ISlider) {
                   dragConstraints: { left: 0, right: 0 },
                 })}
                 onDragEnd={(event, { offset, velocity }) => {
-                  console.log(offset.x, velocity.x);
                   const swipe = swipePower(offset.x, velocity.x);
                   if (swipe < -swipeConfidenceThreshold) {
                     increaseIndex();
@@ -243,7 +246,7 @@ function Slide({ data, category, type, url }: ISlider) {
                   .slice(offset * index, offset * index + offset)
                   .map((movie: IMovie) => (
                     <Box
-                      layoutId={`${movie.id}${type}`}
+                      layoutId={`${movie.id}${category}${type}`}
                       key={movie.id}
                       whileHover="hover"
                       initial="normal"
@@ -260,11 +263,9 @@ function Slide({ data, category, type, url }: ISlider) {
               </Row>
             </AnimatePresence>
           </Slider>
-          {detailMatch ? (
-            <AnimatePresence>
-              <Modal data={data} type={type} category={category} url={url} />
-            </AnimatePresence>
-          ) : null}
+          {bigMovieMatch && category==="movie" ? <Modal data={data} category="movie" type={type} url={url} /> : null}
+          {bigMovieMatch && category==="tv" ? <TvModal data={data} category="tv" type={type} url={url} /> : null}
+          {bigMovieMatch && category==="search" ? <Modal data={data} category="search" type={type} url={url} /> : null}
         </>
       )}
     </Wrapper>

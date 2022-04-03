@@ -4,13 +4,11 @@ import {
   getCredits,
   getDetail,
   getSimilar,
-  getVideo,
   ICast,
   ICredit,
   IDetail,
   IGetMovieResult,
   IMovie,
-  IVideo,
 } from "../api";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
@@ -19,14 +17,14 @@ import { makeImagePath } from "../Routes/Utils";
 import { useQuery } from "react-query";
 import { ISlider } from "./Slide";
 import FavBtn from "./FavBtn";
-import { AnimatePresence } from "framer-motion";
+import {AnimatePresence } from "framer-motion";
 
 const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  left:0;
+  right:0;
+  bottom:0;
   background-color: rgba(0, 0, 0, 0.85);
   opacity: 0;
   z-index: 99;
@@ -116,8 +114,13 @@ const Bigdate = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  span {
+    display:block;
+    margin-left: 1rem;
+  }
 `;
 const BigTitle = styled.hgroup`
+
   h3 {
     color: ${(props) => props.theme.text};
     font-size: 2.8em;
@@ -211,38 +214,37 @@ const infoVariants = {
   },
 };
 
-function Modal({ data, category, type, url }: ISlider) {
+function TvModal({ data, category, type, url }: ISlider) {
   const history = useHistory();
   const onOverlayClick = () => history.goBack();
   const { scrollY } = useViewportScroll();
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>(
+  const bigMovieMatch =  useRouteMatch<{ movieId: string }>(
     `/${url}/${type}/:movieId`
   );
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
     data?.results.find(
-      (movie: IMovie) => +movie.id === +bigMovieMatch.params.movieId
+      (movie: IMovie) => movie.id === +bigMovieMatch.params.movieId
     );
   //영화, tv 쇼 세부 정보 fetch
   const { data: detail } = useQuery<IDetail>(
     ["details", `detail_${bigMovieMatch?.params.movieId}`],
-    () => getDetail("movie", bigMovieMatch?.params.movieId)
+    () => getDetail("tv", bigMovieMatch?.params.movieId),
+    
   );
   //영화, tv 쇼 비슷한 컨텐츠 fetch
   const { data: similar } = useQuery<IGetMovieResult>(
     ["similars", `similar_${bigMovieMatch?.params.movieId}`],
-    () => getSimilar("movie", bigMovieMatch?.params.movieId)
+    () => getSimilar("tv", bigMovieMatch?.params.movieId)
   );
   //영화, tv 쇼 크레딧 fetch
   const { data: credits } = useQuery<ICredit>(
     ["credits", `credit_${bigMovieMatch?.params.movieId}`],
-    () => getCredits("movie", bigMovieMatch?.params.movieId)
+    () => getCredits("tv", bigMovieMatch?.params.movieId)
   );
-
-
   return (
     <AnimatePresence>
-      {bigMovieMatch ? (
+      {bigMovieMatch && data ? (
         <>
           <Overlay
             onClick={onOverlayClick}
@@ -251,7 +253,7 @@ function Modal({ data, category, type, url }: ISlider) {
           />
           <BigMovie
             style={{ top: scrollY.get() + 100 }}
-            layoutId={`${bigMovieMatch.params.movieId}${category}${type}`}
+            layoutId={`${bigMovieMatch.params.movieId}${type}`}
           >
             {clickedMovie && detail ? (
               <>
@@ -270,7 +272,6 @@ function Modal({ data, category, type, url }: ISlider) {
                     category={category}
                   />
                 </BigCover>
-
                 <DetailWrap>
                   <BigTitle>
                     <h4>
@@ -283,9 +284,11 @@ function Modal({ data, category, type, url }: ISlider) {
                   <Bigdate>
                     <span>
                       {(
-                        clickedMovie.release_date || clickedMovie.first_air_date
+                        clickedMovie.first_air_date
                       ).substr(0, 4)}
                     </span>
+                    <span>시즌 {detail?.number_of_seasons}개</span>
+                    <span>에피소드 {detail?.number_of_episodes}개</span>
                     {detail.runtime ? (
                       <Runtime>
                         <BiCameraMovie />
@@ -302,6 +305,7 @@ function Modal({ data, category, type, url }: ISlider) {
                         공식 홈페이지
                       </HompageBtn>
                     ) : null}
+                    
                   </Bigdate>
                   <BigVote>
                     <FaStar /> {clickedMovie.vote_average}
@@ -351,4 +355,4 @@ function Modal({ data, category, type, url }: ISlider) {
     </AnimatePresence>
   );
 }
-export default Modal;
+export default TvModal;

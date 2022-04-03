@@ -1,9 +1,10 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import { getMovies, getPopularMovies, getTopRatedMovies, getUpcommingMovies, IGetMovieResult } from "../api";
+import { getMovies, getPopularMovies, getTopRatedMovies, getUpcommingMovies, getVideo, IGetMovieResult, IVideo } from "../api";
 import Slide from "../Components/Slide";
 import Banner from "../Components/Banner";
 import { Helmet } from "react-helmet-async";
+import Modal from "../Components/Modal";
 
 const Wrapper = styled.main`
   background-color: ${props => props.theme.bgDarker};
@@ -30,6 +31,7 @@ function Home() {
     ["movies", "nowPlaying"],
     getMovies
   );
+
   const { data: popularMovie, isLoading:LoadPopularMovies } = useQuery<IGetMovieResult>(
     ["movies", "popularMovie"],
     getPopularMovies
@@ -55,19 +57,23 @@ function Home() {
         <>
           <Banner data={popularMovie} category="movie" />
           <SlideTitle>상영 중인 영화</SlideTitle>
-          <Slide data={nowPlaying} type="nowPlaying" category="movie" url="" />
+          <Slide data={nowPlaying} type="nowPlaying" category="movie" url="movie" />
           <SlideWrap>
           <SlideTitle>인기 영화</SlideTitle>
-          <Slide data={popularMovie} type="popularMovie" category="movie" url="" />
+          <Slide data={popularMovie} type="popularMovie" category="movie" url="movie" />
           </SlideWrap>
           <SlideWrap>
           <SlideTitle>평판이 좋은 영화</SlideTitle>
-          <Slide data={TopMovie} type="TopMovie" category="movie" url="" />
+          <Slide data={TopMovie} type="TopMovie" category="movie" url="movie" />
           </SlideWrap>
           <SlideWrap>
           <SlideTitle>개봉 예정인 영화</SlideTitle>
-          <Slide data={UpcommingMovie} type="UpcommingMovie" category="movie" url="" />
+          <Slide data={UpcommingMovie} type="UpcommingMovie" category="movie" url="movie" />
           </SlideWrap>
+          {/* <Modal data={nowPlaying} type="nowPlaying" category="movie" url="movie"  />
+          <Modal data={popularMovie} type="popularMovie" category="movie" url="movie" />
+          <Modal data={TopMovie} type="TopMovie" category="movie" url="movie" />
+          <Modal data={TopMovie} type="TopMovie" category="movie" url="movie" /> */}
         </>
       )}
     </Wrapper>

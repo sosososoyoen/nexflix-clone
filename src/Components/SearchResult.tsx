@@ -1,12 +1,10 @@
-import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { favState } from "../atom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { IMovie } from "../api";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { makeImagePath } from "../Routes/Utils";
 import Modal from "./Modal";
-import { ISlider } from "./Slide";
-import FavModal from "./FavModal";
+import TvModal from "./TvModal";
 
 const Wrapper = styled.article`
   background-color: black;
@@ -17,11 +15,10 @@ const Wrapper = styled.article`
     font-size: 60%;
   }
 `;
+
 const List = styled.div`
-  background-color: black;
-  height: 12.5em;
   position: relative;
-  margin-top: 10rem;
+  height: max-content;
 `;
 
 const Row = styled(motion.div)`
@@ -29,13 +26,12 @@ const Row = styled(motion.div)`
   gap: 5px;
   grid-template-columns: repeat(6, 1fr);
   margin-bottom: 5px;
-  position: absolute;
   width: 100%;
-  height: 100%;
   @media only screen and (max-width: 1024px) {
     grid-template-columns: repeat(4, 1fr);
   }
 `;
+
 const Box = styled(motion.div)<{ bigphoto: string }>`
   background-color: gray;
   background-image: url(${(props) => props.bigphoto});
@@ -50,7 +46,9 @@ const Box = styled(motion.div)<{ bigphoto: string }>`
   &:last-child {
     transform-origin: center right;
   }
+  height: 200px;
 `;
+
 const Info = styled(motion.div)`
   padding: 10px;
   background-color: ${(props) => props.theme.bgLighter};
@@ -76,17 +74,16 @@ const infoVariants = {
     },
   },
 };
-function FavList() {
+
+export interface ISlider {
+  data: any;
+  category?: string;
+  url?: string;
+  type?: string;
+}
+function SearchResult({ data, category, type, url }: ISlider) {
   const history = useHistory();
-  const favourites = useRecoilValue(favState);
-  const onBoxClicked = (
-    type: string | undefined,
-    category: string | undefined,
-    id: number | undefined
-  ) => {
-    history.push(`/${category}/${type}/${id}`);
-    // history.push(`/my-list/${category}/${id}`);
-  };
+
   const boxVariants = {
     normal: {
       scale: 1,
@@ -99,42 +96,52 @@ function FavList() {
       },
     },
   };
+  const onBoxClicked = (movieId: number) => {
+    history.push(`/${url}/${type}/${movieId}`);
+  };
+
+  //slide drag
+
+
+  const bigMovieMatch = useRouteMatch<{ movieId: string }>(
+    `/${url}/${type}/:movieId`
+  );
 
   return (
     <Wrapper>
-      <List>
-        <Row>
-          {favourites !== []
-            ? favourites?.map((movie) => (
-                <Box
-                  layoutId={`${movie.id}${movie.category}`}
-                  key={movie.id}
-                  whileHover="hover"
-                  initial="normal"
-                  transition={{ type: "tween" }}
-                  onClick={() =>
-                    onBoxClicked(movie.type, movie.category, movie.id)
-                  }
-                  variants={boxVariants}
-                  bigphoto={makeImagePath(movie.backdrop_path, "w400")}
-                >
-                  <Info variants={infoVariants}>
-                    <h4>{movie.title || movie.name}</h4>
-                  </Info>
-                  <AnimatePresence>
-                    <FavModal
-                      data={movie}
-                      type={movie.category} //movie or tv
-                      category="my-list"
-                      url={movie.category === "movie" ? "movie" : "tv"}
-                    />
-                  </AnimatePresence>
-                </Box>
-              ))
-            : "Loading..."}
-        </Row>
-      </List>
+      {data && (
+        <List>
+          <Row>
+              {data?.results
+                .map((movie: IMovie) => (
+                  <Box
+                    layoutId={`${movie.id}${category}${type}`}
+                    key={movie.id}
+                    whileHover="hover"
+                    initial="normal"
+                    transition={{ type: "tween" }}
+                    onClick={() => onBoxClicked(movie.id)}
+                    variants={boxVariants}
+                    bigphoto={makeImagePath(movie.backdrop_path, "w400")}
+                  >
+                    <Info variants={infoVariants}>
+                      <h4>{movie.title || movie.name}</h4>
+                    </Info>
+                  </Box>
+                ))}
+            </Row>
+          </List>
+      )}
+      {bigMovieMatch && category === "movie" ? (
+        <Modal data={data} category="movie" type={type} url={url} />
+      ) : null}
+      {bigMovieMatch && category === "tv" ? (
+        <TvModal data={data} category="tv" type={type} url={url} />
+      ) : null}
+      {bigMovieMatch && category === "search" ? (
+        <Modal data={data} category="search" type={type} url={url} />
+      ) : null}
     </Wrapper>
   );
 }
-export default FavList;
+export default SearchResult;
