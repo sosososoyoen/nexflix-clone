@@ -151,7 +151,7 @@ function Banner({ data, category }: IBanner) {
                     modestbranding: 1,
                   },
                 }}
-                onEnd={(e)=>{e.target.stopVideo(0); e.target.clearVideo();}}      
+                onEnd={(e)=>{e.target.stopVideo(0);}}      
               />
             </YouTubeWrap>
           )}
