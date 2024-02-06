@@ -1,5 +1,5 @@
 # 넷플릭스 클론(Netflix Clone)
->URL https://soonmac.github.io/nexflix-clone/
+>URL https://eomzic.github.io/nexflix-clone/
 
 ![capture_05](https://user-images.githubusercontent.com/55690712/161437081-dfdfb018-49e8-439d-89e7-170e3609e665.PNG)
 ![capture_02](https://user-images.githubusercontent.com/55690712/159265664-e7b7c43b-61b3-4308-b3dc-76c774d62759.PNG)
